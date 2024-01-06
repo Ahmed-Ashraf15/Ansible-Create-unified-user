@@ -1,0 +1,25 @@
+- name: create user and give him sudo access
+  hosts: web
+  gather_facts: false
+
+  tasks:
+  - name: create user
+    user:
+      name: ansible_user
+      password: ''
+      group: sudo
+    register: created
+
+  - name: add permission
+    ansible.builtin.lineinfile:
+      path: /etc/sudoers
+      insertafter: '^%sudo'
+      line: 'ansible_user ALL=(ALL) NOPASSWD:ALL'
+      state: present
+    when: created.changed
+
+  - name: add to authorized key
+    authorized_key:
+      user: ansible_user
+      key: "{{ lookup('file', './public_key.pem') }}"
+      state: present
