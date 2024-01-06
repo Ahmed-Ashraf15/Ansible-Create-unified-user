@@ -13,7 +13,7 @@ else
 fi
 
 
-# run ansible playbook with specific root user input from user
+# run ansible playbook with root user 
 
 echo -n 'enter the path of file: '
 read file_name
